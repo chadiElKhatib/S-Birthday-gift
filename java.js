@@ -110,9 +110,12 @@ function showSlide(index) {
     imageTimer = setTimeout(nextSlide, 5000);
   }
 
-  if (slide.type === "video") {
+if (slide.type === "video") {
 
     slideImage.style.display = "none";
+
+    slideVideo.pause();
+    slideVideo.currentTime = 0;
 
     slideVideo.src = slide.src;
     slideVideo.style.display = "block";
@@ -120,20 +123,24 @@ function showSlide(index) {
     music.volume = 0.05;
 
     slideVideo.muted = false;
-    slideVideo.play();
     slideVideo.controls = true;
 
-    slideVideo.onpause = () => {
-     clearTimeout(imageTimer);
-};
+    slideVideo.playsInline = true;
+    slideVideo.setAttribute("playsinline", "");
+    slideVideo.setAttribute("webkit-playsinline", "");
 
-  slideVideo.onended = () => {
+    slideVideo.play();
 
-  music.volume = 0.18;
+    slideVideo.onended = () => {
 
-  nextSlide();
-};
-  }
+        music.volume = 0.18;
+
+        slideVideo.pause();
+        slideVideo.style.display = "none";
+
+        nextSlide();
+    };
+}
 }
 
 
