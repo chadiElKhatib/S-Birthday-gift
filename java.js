@@ -120,9 +120,10 @@ if (slide.type === "video") {
     slideVideo.src = slide.src;
     slideVideo.style.display = "block";
 
-    music.volume = 0.05;
+    music.pause();
 
     slideVideo.muted = false;
+    slideVideo.volume = 1;
     slideVideo.controls = true;
 
     slideVideo.playsInline = true;
@@ -131,16 +132,20 @@ if (slide.type === "video") {
 
     slideVideo.play();
 
-    slideVideo.onended = () => {
-
-        music.volume = 0.18;
+    slideVideo.onended = async () => {
 
         slideVideo.pause();
         slideVideo.style.display = "none";
 
         nextSlide();
+
+        try {
+            music.volume = 0.18;
+            await music.play();
+        } catch (e) {
+            console.log("Music could not restart automatically");
+        }
     };
-}
 }
 
 
@@ -157,4 +162,5 @@ if (currentSlide >= slides.length) {
 }
 
   showSlide(currentSlide);
+}
 }
