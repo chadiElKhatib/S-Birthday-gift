@@ -120,9 +120,7 @@ if (slide.type === "video") {
     slideVideo.src = slide.src;
     slideVideo.style.display = "block";
 
-    music.pause();
-
-    slideVideo.muted = false;
+    slideVideo.muted = true;
     slideVideo.volume = 1;
     slideVideo.controls = true;
 
@@ -138,13 +136,6 @@ if (slide.type === "video") {
         slideVideo.style.display = "none";
 
         nextSlide();
-
-        try {
-            music.volume = 0.18;
-            await music.play();
-        } catch (e) {
-            console.log("Music could not restart automatically");
-        }
     };
 }
 
