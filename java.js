@@ -134,6 +134,7 @@ if (slide.type === "video") {
     slideVideo.onended = () => {
 
         music.volume = 0.18;
+        music.play();
 
         slideVideo.pause();
         slideVideo.style.display = "none";
