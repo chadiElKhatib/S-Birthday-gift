@@ -353,3 +353,9 @@ body {
     margin-top: -20px;
   }
 }
+
+@media (max-width: 768px) {
+  .slideshow {
+    padding-bottom: 90px;
+  }
+}
