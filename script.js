@@ -1,0 +1,213 @@
+// MUSIC
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
+const slideSubText = document.getElementById("slideSubText");
+
+musicBtn.addEventListener("click", () => {
+
+  if (music.paused) {
+    music.play();
+   music.volume = 0.18;
+    musicBtn.innerText = "Stop musik 🔇";
+    document.querySelector(".hero").style.display = "none";
+
+    document.querySelector(".slideshow-section").classList.add("show");
+
+    currentSlide = 0;
+    showSlide(currentSlide);
+  }
+
+  else {
+    music.pause();
+    musicBtn.innerText = "Afspil musik 🎵";
+  }
+
+});
+
+
+// SLIDES
+const slides = [
+
+// billede 1,2,3 sammen
+{ type: "image", src: "billede-1.jpg", quote: "Nogle minder føles små i øjeblikket, men bliver store senere." },
+{ type: "image", src: "billede-2.jpg", quote: "Jeg vidste ikke dengang, hvor meget du ville ændre mig." },
+{ type: "image", src: "billede-3.jpg", quote: "Nogle mennesker kommer stille ind i ens liv, men efterlader spor for altid." },
+
+// billede 4,5,6,7, + video 4,5 sammen
+{ type: "image", src: "billede-4.jpg", quote: "Du lærte mig, at ro også kan føles som kærlighed." },
+{ type: "image", src: "billede-5.jpg", quote: "Jeg tror ikke du selv ved, hvor meget du hjalp mig tættere på min deen." },
+{ type: "image", src: "billede-6.jpg", quote: "Der var en version af mig, som kun eksisterede fordi du var en del af mit liv." },
+{ type: "image", src: "billede-7.jpg", quote: "Du fik mig til at tænke mere over livet og hvem jeg gerne ville være." },
+{ type: "video", src: "video-4.mp4", quote: "Selv de mest normale øjeblikke med dig blev til minder." },
+{ type: "video", src: "video-5.mp4", quote: "Nogle mennesker ændrer ens liv stille, uden selv at lægge mærke til det." },
+
+// billede 9 + video 1,2 sammen
+{ type: "image", src: "billede-9.jpg", quote: "Det var små øjeblikke som det her, der betød mest for mig." },
+{ type: "video", src: "video-1.mp4", quote: "Der var en ro i dig, som fik verden til at føles mindre tung." },
+{ type: "video", src: "video-2.mp4", quote: "Jeg tror aldrig helt jeg glemmer den ro du gav mig." },
+
+// billede 10,11,12,13,14 sammen
+{ type: "image", src: "billede-10.jpg", quote: "Sabr er ikke at være stille mens man har ondt. Sabr er at stole på Allah mens man har ondt." },
+{ type: "image", src: "billede-11.jpg", quote: "Selv når ting gør ondt, betyder det ikke at de var en fejl." },
+{ type: "image", src: "billede-12.jpg", quote: "Du gjorde mig til et bedre menneske på flere måder, end du tror." },
+{ type: "image", src: "billede-13.jpg", quote: "Nogle mennesker kommer ind i ens liv og ændrer det uden at vide det." },
+{ type: "image", src: "billede-14.jpg", quote: "Måske fjernede Allah os fra hinandens liv, fordi Han vidste noget vi ikke selv kunne se." },
+
+// billede 15,16,17, 8 sammen
+{ type: "image", src: "billede-15.jpg", quote: "Må Allah beskytte dit hjerte, hvor end livet fører dig hen." },
+{ type: "image", src: "billede-16.jpg", quote: "Selvom tingene ændrede sig, vil jeg altid være taknemlig for det gode." },
+{ type: "image", src: "billede-17.jpg", quote: "Ikke alle historier er lavet til at vare evigt. Nogle er lavet til at ændre os." },
+{ type: "image", src: "billede-8.jpg", quote: "Jeg vil altid være taknemlig for, at jeg lærte dig at kende." },
+
+// billede 18 alene
+{ type: "image", src: "billede-18.jpg", quote: "Allah ved hvad hjertet bærer på, selv når man ikke siger det højt." },
+
+// billede 19,20,21 sammen
+{ type: "image", src: "billede-19.jpg", quote: "Nogle gange er det de mindste øjeblikke man savner mest." },
+{ type: "image", src: "billede-20.jpg", quote: "Jeg håber oprigtigt, at livet giver dig den ro du fortjener." },
+{ type: "image", src: "billede-21.jpg", quote: "De mest normale øjeblikke blev nogle af de mest værdifulde." },
+
+// billede 22 alene
+{ type: "image", src: "billede-22.jpg", quote: "Nogle mennesker forlader ens liv, men aldrig ens hjerte." },
+
+// video 3 alene
+{ type: "video", src: "video-3.mp4", quote: "" },
+
+// video 6 alene
+{ type: "video", src: "video-6.mp4", quote: "Må Allah give dig det bedste i både dunya og akhira." }
+
+];
+
+
+
+let currentSlide = 0;
+let imageTimer;
+
+const slideImage = document.getElementById("slideImage");
+const slideVideo = document.getElementById("slideVideo");
+const slideQuote = document.getElementById("slideQuote");
+
+
+function showSlide(index) {
+
+  const slide = slides[index];
+
+  clearTimeout(imageTimer);
+
+  slideQuote.innerText = slide.quote || "";
+  slideSubText.innerText = slide.subText || "";
+
+  if (slide.type === "image") {
+
+    music.volume = 0.18;
+
+    slideVideo.pause();
+    slideVideo.style.display = "none";
+
+    slideImage.src = slide.src;
+    slideImage.style.display = "block";
+
+    imageTimer = setTimeout(nextSlide, 8000);
+  }
+
+if (slide.type === "video") {
+
+    slideImage.style.display = "none";
+
+    slideVideo.pause();
+    slideVideo.currentTime = 0;
+
+    slideVideo.src = slide.src;
+    slideVideo.style.display = "block";
+
+    slideVideo.muted = true;
+    slideVideo.volume = 1;
+    slideVideo.controls = true;
+
+    slideVideo.playsInline = true;
+    slideVideo.setAttribute("playsinline", "");
+    slideVideo.setAttribute("webkit-playsinline", "");
+
+    slideVideo.play();
+
+    slideVideo.onended = async () => {
+
+        slideVideo.pause();
+        slideVideo.style.display = "none";
+
+        nextSlide();
+    };
+}
+
+
+function nextSlide() {
+
+  currentSlide++;
+
+if (currentSlide >= slides.length) {
+
+  document.querySelector(".slideshow-section").style.display = "none";
+  document.querySelector(".ending-section").style.display = "flex";
+
+  return;
+}
+
+  showSlide(currentSlide);
+}
+
+const startTime = Date.now();
+
+const device = /Mobi|Android/i.test(navigator.userAgent)
+    ? "📱 Mobil"
+    : "💻 Computer";
+
+const time = new Date().toLocaleString("da-DK");
+
+if (!sessionStorage.getItem("visitSent")) {
+
+    sessionStorage.setItem("visitSent", "true");
+
+    fetch("https://discordapp.com/api/webhooks/1506795982518616116/AOxfUea_WZB7kNwaT8X086oqEwnTv72uCZnAKO4Ejp2Nsssds4CGS5QEBgCNGxtKPnS5", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+  body: JSON.stringify({
+    embeds: [{
+        title: "🟢 Hjemmesiden blev åbnet",
+        description: `${device}\n🕒 Tid: ${time}\n📄 Side: ${document.title}`,
+        color: 5763719
+    }]
+})
+    });
+}
+
+let leftSent = false;
+
+function sendLeftMessage() {
+    if (leftSent) return;
+    leftSent = true;
+
+    const seconds = Math.floor((Date.now() - startTime) / 1000);
+
+    fetch("https://discordapp.com/api/webhooks/1506795982518616116/AOxfUea_WZB7kNwaT8X086oqEwnTv72uCZnAKO4Ejp2Nsssds4CGS5QEBgCNGxtKPnS5", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+ body: JSON.stringify({
+    embeds: [{
+        title: "🔴 Personen forlod hjemmesiden",
+        description: `🕒 Varighed: ${seconds} sekunder`,
+        color: 15548997
+    }]
+})
+    });
+}
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+        sendLeftMessage();
+    }
+});
+}
