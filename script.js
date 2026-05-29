@@ -3,11 +3,72 @@ const music = document.getElementById("bgMusic");
 const musicBtn = document.getElementById("musicBtn");
 const slideSubText = document.getElementById("slideSubText");
 
+function animateSlide(element, index) {
+    const animations = ["slide-zoom", "slide-left", "slide-float"];
+
+    element.classList.remove("slide-zoom", "slide-left", "slide-float", "cinematic-active");
+
+    element.style.animation = "none";
+    void element.offsetWidth;
+    element.style.animation = "";
+
+    const animation = animations[index % animations.length];
+    element.classList.add(animation);
+
+    setTimeout(() => {
+        element.classList.add("cinematic-active");
+    }, 1500);
+}
+
+const title = "Tillykke med fødselsdagen";
+const birthdayTitle = document.getElementById("birthdayTitle");
+
+const middle = (title.length - 1) / 2;
+
+title.split("").forEach((letter, index) => {
+    const span = document.createElement("span");
+    span.innerHTML = letter === " " ? "&nbsp;" : letter;
+
+    const distance = index - middle;
+    const curve = Math.pow(distance, 2) * 0.35;
+
+   const randomX = (Math.random() - 0.5) * 900;
+const randomY = (Math.random() - 0.5) * 500;
+const randomRotate = (Math.random() - 0.5) * 180;
+
+span.style.setProperty("--start-transform",
+  `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg) scale(0.3)`
+);
+
+span.style.setProperty("--final-transform",
+  `translateY(${curve}px) rotate(${distance * 1.8}deg)`
+);
+
+span.style.animationDelay = `${4.1 + index * 0.035}s`;
+birthdayTitle.appendChild(span);
+});
+
+const knockSound = document.getElementById("knockSound");
+
 musicBtn.addEventListener("click", () => {
 
   if (music.paused) {
+    music.volume = 0;
     music.play();
-   music.volume = 0.18;
+
+  let volume = 0.01;
+music.volume = volume;
+
+const fadeMusic = setInterval(() => {
+    if (volume < 0.18) {
+        volume += 0.003;
+        music.volume = volume;
+    } else {
+        music.volume = 0.18;
+        clearInterval(fadeMusic);
+    }
+}, 50);
+
     musicBtn.innerText = "Stop musik 🔇";
     document.querySelector(".hero").style.display = "none";
 
@@ -94,8 +155,14 @@ function showSlide(index) {
 
   clearTimeout(imageTimer);
 
-  slideQuote.innerText = slide.quote || "";
-  slideSubText.innerText = slide.subText || "";
+slideQuote.innerText = slide.quote || "";
+slideQuote.style.opacity = "0";
+
+setTimeout(() => {
+    slideQuote.style.opacity = "1";
+}, 200);
+
+slideSubText.innerText = slide.subText || "";
 
   if (slide.type === "image") {
 
@@ -106,6 +173,7 @@ function showSlide(index) {
 
     slideImage.src = slide.src;
     slideImage.style.display = "block";
+    animateSlide(slideImage,index);
 
     imageTimer = setTimeout(nextSlide, 8000);
   }
@@ -119,6 +187,7 @@ if (slide.type === "video") {
 
     slideVideo.src = slide.src;
     slideVideo.style.display = "block";
+    animateSlide(slideVideo, index);
 
     slideVideo.muted = true;
     slideVideo.volume = 1;
@@ -167,14 +236,14 @@ if (!sessionStorage.getItem("visitSent")) {
 
     sessionStorage.setItem("visitSent", "true");
 
-    fetch("https://discordapp.com/api/webhooks/1506795982518616116/AOxfUea_WZB7kNwaT8X086oqEwnTv72uCZnAKO4Ejp2Nsssds4CGS5QEBgCNGxtKPnS5", {
+    fetch("https://discordapp.com/api/webhooks/1509934219260989501/LBWgdAZrwS9i2yFdfOkYOULcB49nARjQqTMe6jHMbsJPEasDErBaFkH_UpIYkHhvJgmC", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
   body: JSON.stringify({
     embeds: [{
-        title: "🟢 Hjemmesiden blev åbnet",
+        title: "🟢 Fødselsdagsgaven blev åbnet",
         description: `${device}\n🕒 Tid: ${time}\n📄 Side: ${document.title}`,
         color: 5763719
     }]
@@ -190,14 +259,14 @@ function sendLeftMessage() {
 
     const seconds = Math.floor((Date.now() - startTime) / 1000);
 
-    fetch("https://discordapp.com/api/webhooks/1506795982518616116/AOxfUea_WZB7kNwaT8X086oqEwnTv72uCZnAKO4Ejp2Nsssds4CGS5QEBgCNGxtKPnS5", {
+    fetch("https://discordapp.com/api/webhooks/1509934219260989501/LBWgdAZrwS9i2yFdfOkYOULcB49nARjQqTMe6jHMbsJPEasDErBaFkH_UpIYkHhvJgmC", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
  body: JSON.stringify({
     embeds: [{
-        title: "🔴 Personen forlod hjemmesiden",
+        title: "🔴 Personen forlod fødselsdagsgaven",
         description: `🕒 Varighed: ${seconds} sekunder`,
         color: 15548997
     }]
@@ -211,3 +280,22 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 }
+
+function createParticles() {
+    for (let i = 0; i < 50; i++) {
+        const particle = document.createElement("span");
+        particle.classList.add("particle");
+
+        particle.style.left = Math.random() * 100 + "vw";
+        particle.style.top = Math.random() * 100 + "vh";
+        particle.style.animationDuration = 8 + Math.random() * 10 + "s";
+        particle.style.animationDelay = Math.random() * 6 + "s";
+        particle.style.width = 2 + Math.random() * 8 + "px";
+        particle.style.height = particle.style.width;
+        particle.style.opacity = 0.2 + Math.random() * 0.7;
+
+        document.body.appendChild(particle);
+    }
+}
+
+createParticles();
