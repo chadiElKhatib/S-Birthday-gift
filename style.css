@@ -11,6 +11,8 @@ html, body {
 }
 
 body {
+  min-height: 100dvb;
+
   font-family: Georgia, serif;
   color: white;
   background: radial-gradient(circle at top, #1b1b4b, #050816 75%);
@@ -38,7 +40,7 @@ body {
 /* HERO */
 .hero {
     position: relative;
-    min-height: 100vh;
+    min-height: 100dvh;
 
     display: flex;
     flex-direction: column;
@@ -417,8 +419,97 @@ body {
   }
 }
 
+
+/*  Slide redegering   */
+@media (max-width: 480px) {
+
+  .quote-box {
+    width: 280px;
+    bottom: 160px;
+  }
+
+  #slideQuote {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .slideshow img,
+  .slideshow video {
+    width: 90%;
+    border-radius: 24px;
+  }
+
+   .slide-5 .quote-box {
+    bottom: 150px;
+  }
+
+  .slide-6 .quote-box {
+    bottom: 170px;
+  }
+
+  .slide-7 .quote-box {
+    bottom: 30px;
+  }
+
+  .slide-8 .quote-box {
+    bottom: 35px;
+  }
+
+  .slide-9 .quote-box {
+    bottom: 35px;
+  }
+
+   .slide-10 .quote-box {
+    bottom: 35px;
+  }
+
+   .slide-11 .quote-box {
+    bottom: 35px;
+  }
+
+   .slide-12 .quote-box {
+    bottom: 140px;
+  }
+
+   .slide-16 .quote-box {
+    bottom: 145px;
+  }
+
+   .slide-17 .quote-box {
+    bottom: 35px;
+  }
+
+   .slide-18 .quote-box {
+    bottom: 35px;
+  }
+
+   .slide-19 .quote-box {
+    bottom: 35px;
+  }
+
+   .slide-22 .quote-box {
+    bottom: 50px;
+  }
+
+   .slide-23 .quote-box {
+    bottom: 50px;
+  }
+
+   .slide-24 .quote-box {
+    bottom: 50px;
+  }
+
+  .slide-25 .quote-box {
+    bottom: 35px;
+  }
+
+  .slide-27 .quote-box {
+    bottom: 35px;
+  }
+}
+
 /* Iphone XR */
-@media (max-width: 480px) and (min-height: 800px) {
+@media (min-width: 400px) and (max-width: 419px) and (min-height: 850px) {
   .hero {
     justify-content: center;
   }
@@ -442,10 +533,90 @@ body {
     .story-btn {
     margin-top: 8px;
   }
+     .quote-box {
+        bottom: 280px;
+    }
 }
 
+/*  Slide redegering   */
+@media (min-width: 400px) and (max-width: 419px) and (min-height: 850px) {
+    
+  .slide-5 .quote-box {
+    bottom: 260px;
+    }
+
+    .slide-6 .quote-box {
+    bottom: 270px;
+    }
+
+    .slide-7 .quote-box {
+    bottom: 60px;
+    }
+
+    .slide-8 .quote-box {
+    bottom: 60px;
+    }
+
+    .slide-9 .quote-box {
+    bottom: 80px;
+    }
+
+    .slide-10 .quote-box {
+    bottom: 65px;
+    }
+
+    .slide-11 .quote-box {
+    bottom: 65px;
+    }
+
+     .slide-12 .quote-box {
+    bottom: 255px;
+    }
+
+     .slide-16 .quote-box {
+    bottom: 255px;
+    }
+
+     .slide-17 .quote-box {
+    bottom: 65px;
+    }
+
+     .slide-18 .quote-box {
+    bottom: 65px;
+    }
+
+     .slide-19 .quote-box {
+    bottom: 65px;
+    }
+
+     .slide-11 .quote-box {
+    bottom: 65px;
+    }
+
+     .slide-22 .quote-box {
+    bottom: 145px;
+    }
+
+    .slide-23 .quote-box {
+    bottom: 145px;
+    }
+    
+    .slide-24 .quote-box {
+    bottom: 145px;
+    }
+
+    .slide-25 .quote-box {
+    bottom: 65px;
+    }
+
+    .slide-27 .quote-box {
+    bottom: 65px;
+    }
+  }
+
+
 /* Iphone 12 Pro */
-@media (max-width: 480px) and (min-height: 800px) {
+@media (min-width: 385px) and (max-width: 399px) and (min-height: 820px) {
   .wizard {
     top: 75px;
   }
@@ -460,6 +631,82 @@ body {
    .story-btn {
     margin-top: 8px;
   }
+
+  .quote-box {
+    bottom: 250px;
+  }
+}
+
+/*  Slide redegering   */
+@media (min-width: 385px) and (max-width: 399px) and (min-height: 820px) {
+
+   .slide-5 .quote-box {
+    bottom: 235px;
+    }
+
+    .slide-6 .quote-box {
+    bottom: 260px;
+    }
+
+    .slide-7 .quote-box {
+    bottom: 60px;
+    }
+
+    .slide-8 .quote-box {
+    bottom: 60px;
+    }
+
+     .slide-9 .quote-box {
+    bottom: 80px;
+    }
+
+     .slide-10 .quote-box {
+    bottom: 60px;
+    }
+
+     .slide-11 .quote-box {
+    bottom: 60px;
+    }
+
+     .slide-12 .quote-box {
+    bottom: 240px;
+    }
+
+     .slide-16 .quote-box {
+    bottom: 240px;
+    }
+
+     .slide-17 .quote-box {
+    bottom: 60px;
+    }
+
+     .slide-18 .quote-box {
+    bottom: 60px;
+    }
+
+     .slide-19 .quote-box {
+    bottom: 60px;
+    }
+
+     .slide-22 .quote-box {
+    bottom: 135px;
+    }
+
+     .slide-23 .quote-box {
+    bottom: 135px;
+    }
+
+    .slide-24 .quote-box {
+    bottom: 135px;
+    }
+
+    .slide-25 .quote-box {
+    bottom: 60px;
+    }
+
+    .slide-27 .quote-box {
+    bottom: 65px;
+    }
 }
 
 /* Iphone 14 Pro Max */
@@ -488,6 +735,86 @@ body {
    .story-btn {
     margin-top: 8px;
   }
+
+  .quote-box {
+    bottom: 295px;
+  }
+}
+
+/*  Slide redegering   */
+@media (min-width: 420px) and (max-width: 440px) and (min-height: 900px) {
+
+    .slide- .quote-box {
+    bottom: 65px;
+    }
+
+    .slide-5 .quote-box {
+    bottom: 270px;
+    }
+
+    .slide-6 .quote-box {
+    bottom: 290px;
+    }
+
+    .slide-7 .quote-box {
+    bottom: 65px;
+    }
+
+    .slide-8 .quote-box {
+    bottom: 65px;
+    }
+
+    .slide-9 .quote-box {
+    bottom: 95px;
+    }
+
+    .slide-10 .quote-box {
+    bottom: 75px;
+    }
+
+    .slide-11 .quote-box {
+    bottom: 75px;
+    }
+
+    .slide-12 .quote-box {
+    bottom: 270px;
+    }
+
+    .slide-16 .quote-box {
+    bottom: 270px;
+    }
+
+    .slide-17 .quote-box {
+    bottom: 65px;
+    }
+
+    .slide-18 .quote-box {
+    bottom: 65px;
+    }
+
+      .slide-19 .quote-box {
+    bottom: 65px;
+    }
+
+      .slide-22 .quote-box {
+    bottom: 155px;
+    }
+
+      .slide-23 .quote-box {
+    bottom: 155px;
+    }
+
+      .slide-24 .quote-box {
+    bottom: 155px;
+    }
+
+      .slide-25 .quote-box {
+    bottom: 65px;
+    }
+
+      .slide-27 .quote-box {
+    bottom: 65px;
+    }
 }
 
 /* Pixel 7 */
@@ -523,3 +850,5 @@ body {
     margin-top: 8px;
   }
 }
+
+/*  Slide redegering   */
