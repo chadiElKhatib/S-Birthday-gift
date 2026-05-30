@@ -6,16 +6,26 @@
 
 html, body {
   width: 100%;
-  min-height: 100%;
-  overflow-x: hidden;
+  height: 100%;
+  min-height: 100dvh;
+  overflow: hidden;
 }
 
 body {
-  min-height: 100dvb;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
 
   font-family: Georgia, serif;
   color: white;
   background: radial-gradient(circle at top, #1b1b4b, #050816 75%);
+}
+
+.hero,
+.slideshow-section {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
 }
 
 /* BACKGROUND */
