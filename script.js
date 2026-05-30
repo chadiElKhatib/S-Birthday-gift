@@ -312,11 +312,10 @@ const slideImage = document.getElementById("slideImage");
 const slideVideo = document.getElementById("slideVideo");
 const slideQuote = document.getElementById("slideQuote");
 
-
 function showSlide(index) {
 
   const slide = slides[index];
-  const slideshowSection = document.querySelector(".slideshow-section");
+  const slideshowSection = document.querySelector(".slideshow-section")
 
   slideshowSection.className = "slideshow-section show " + slide.className;
 
@@ -342,7 +341,7 @@ slideSubText.innerText = slide.subText || "";
     slideImage.style.display = "block";
     animateSlide(slideImage,index);
 
-    imageTimer = setTimeout(nextSlide, 8000);
+    //imageTimer = setTimeout(nextSlide, 8000);
   }
 
 if (slide.type === "video") {
@@ -467,12 +466,12 @@ function createParticles() {
 
 createParticles();
 
-/*
+
 // SLET EFTER
 window.onload = () => {
   document.querySelector(".hero").style.display = "none";
   document.querySelector(".slideshow-section").classList.add("show");
 
-  currentSlide = 0;
+  currentSlide = 27;
   showSlide(currentSlide);  
-  };*/
+  };

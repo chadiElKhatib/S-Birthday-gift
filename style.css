@@ -363,6 +363,94 @@ body {
 
 /* RESPONSIVE */
 
+/* Desktop */
+@media (min-width: 1024px) {
+  .slideshow img,
+    .slideshow video {
+        width: 60%;
+        max-width: 1100px;
+    }
+
+    .quote-box {
+        bottom: 80px;
+        width: 70%;
+    }
+
+    #slideQuote {
+        font-size: 33px;
+        line-height: 1.2;
+    }
+}
+
+/*  Slide redegering   */
+@media (min-width: 1024px) {
+
+  .slide-2 .quote-box {
+    bottom: 50px;
+    }
+    
+    .slide-4 .quote-box {
+    bottom: 50px;
+    }
+
+    .slide-5 .quote-box {
+    bottom: 50px;
+    }
+
+    .slide-6 .quote-box {
+    bottom: 50px;
+    }
+
+    .slide-8 .quote-box {
+    bottom: 40px;
+    }
+
+    .slide-12 .quote-box {
+    bottom: 50px;
+    }
+
+    .slide-14 .quote-box {
+    bottom: 50px;
+    }
+
+    .slide-15 .quote-box {
+    bottom: 50px;
+    }
+
+    .slide-16 .quote-box {
+    bottom: 50px;
+    }
+
+    .slide-18 .quote-box {
+    bottom: 40px;
+    }
+
+    .slide-19 .quote-box {
+    bottom: 40px;
+    }
+
+    .slide-21 .quote-box {
+    bottom: 50px;
+    }
+
+    .slide- .quote-box {
+    bottom: 65px;
+    }
+
+    .slide- .quote-box {
+    bottom: 65px;
+    }
+
+    .slide- .quote-box {
+    bottom: 65px;
+    }
+
+    .slide- .quote-box {
+    bottom: 65px;
+    }
+}
+  
+
 /* iPhone SE */
 @media (max-width: 480px) {
   .hero {
