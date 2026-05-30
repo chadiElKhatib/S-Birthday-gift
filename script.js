@@ -302,11 +302,8 @@ const slides = [
   src: "video-6.mp4",
   quote: "Må Allah give dig det bedste i både dunya og akhira.",
   className: "slide-27"
-}
-
+    }
 ];
-
-
 
 let currentSlide = 0;
 let imageTimer;
