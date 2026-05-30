@@ -71,7 +71,6 @@ const fadeMusic = setInterval(() => {
 
     musicBtn.innerText = "Stop musik 🔇";
     document.querySelector(".hero").style.display = "none";
-
     document.querySelector(".slideshow-section").classList.add("show");
 
     currentSlide = 0;
@@ -479,5 +478,4 @@ window.onload = () => {
 
   currentSlide = 0;
   showSlide(currentSlide);  
-  }*/
- ;
+  };*/
