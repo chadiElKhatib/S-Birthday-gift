@@ -472,6 +472,6 @@ window.onload = () => {
   document.querySelector(".hero").style.display = "none";
   document.querySelector(".slideshow-section").classList.add("show");
 
-  currentSlide = 27;
+  currentSlide = 0;
   showSlide(currentSlide);  
   };*/
