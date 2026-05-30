@@ -346,7 +346,7 @@ slideSubText.innerText = slide.subText || "";
     slideImage.style.display = "block";
     animateSlide(slideImage,index);
 
-    imageTimer = setTimeout(nextSlide, 8000);
+    //imageTimer = setTimeout(nextSlide, 8000);
   }
 
 if (slide.type === "video") {
@@ -478,5 +478,6 @@ window.onload = () => {
   document.querySelector(".slideshow-section").classList.add("show");
 
   currentSlide = 0;
-  showSlide(currentSlide);
-};
+  showSlide(currentSlide);  
+  }*/
+ ;
