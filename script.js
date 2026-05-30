@@ -345,7 +345,7 @@ slideSubText.innerText = slide.subText || "";
     slideImage.style.display = "block";
     animateSlide(slideImage,index);
 
-    //imageTimer = setTimeout(nextSlide, 8000);
+    imageTimer = setTimeout(nextSlide, 8000);
   }
 
 if (slide.type === "video") {
