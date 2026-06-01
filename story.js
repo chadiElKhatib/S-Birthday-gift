@@ -17,6 +17,7 @@ function createStoryParticles() {
 
 createStoryParticles();
 
+/*
 const startTime = Date.now();
 
 const device = /Mobi|Android/i.test(navigator.userAgent)
@@ -66,4 +67,4 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") {
     sendLeftMessage();
   }
-});
+});*/

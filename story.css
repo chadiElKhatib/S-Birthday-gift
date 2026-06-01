@@ -42,7 +42,11 @@ body {
 
 .story-page h1 {
 
-    font-size: 58px;
+    font-size: clamp(24px, 8vw, 58px);
+
+    white-space: nowrap;
+
+    line-height: 1.1;
 
     margin-bottom: 35px;
 
@@ -51,7 +55,6 @@ body {
     text-shadow:
     0 0 30px rgba(255,255,255,0.35);
 }
-
 .story-page p {
 
     font-size: 23px;
@@ -162,3 +165,61 @@ body {
     opacity: 0;
   }
 }
+
+/* ---------------- MOBILE ---------------- */
+
+@media (max-width: 768px) {
+
+    .story-page {
+
+        width: 92%;
+        padding: 45px 22px;
+        border-radius: 24px;
+    }
+
+    .story-page p {
+
+        font-size: 18px;
+        line-height: 1.9;
+
+        margin-bottom: 28px;
+    }
+
+    .story-particles::before,
+    .story-particles::after {
+
+        width: 320px;
+        height: 320px;
+    }
+}
+
+
+/* ---------------- SMALL PHONES ---------------- */
+
+@media (max-width: 480px) {
+
+    .story-page {
+
+        width: 95%;
+        padding: 38px 18px;
+        border-radius: 20px;
+    }
+
+    .story-page p {
+
+        font-size: 16px;
+        line-height: 1.8;
+
+        margin-bottom: 24px;
+    }
+
+    .story-particles::before,
+    .story-particles::after {
+
+        width: 220px;
+        height: 220px;
+
+        filter: blur(30px);
+    }
+}
+
