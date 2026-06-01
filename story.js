@@ -48,19 +48,18 @@ function sendLeftMessage() {
 
   const seconds = Math.floor((Date.now() - startTime) / 1000);
 
-    fetch("https://discordapp.com/api/webhooks/1509934219260989501/LBWgdAZrwS9i2yFdfOkYOULcB49nARjQqTMe6jHMbsJPEasDErBaFkH_UpIYkHhvJgmC", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      embeds: [{
-        title: "🔴 Personen forlod story-siden",
-        description: `🕒 Varighed: ${seconds} sekunder`,
-        color: 15548997
-      }]
-    })
-  });
+  const data = {
+    embeds: [{
+      title: "🔴 Personen forlod story-siden",
+      description: `🕒 Varighed: ${seconds} sekunder`,
+      color: 15548997
+    }]
+  };
+
+  navigator.sendBeacon(
+    "https://discordapp.com/api/webhooks/1509934219260989501/LBWgdAZrwS9i2yFdfOkYOULcB49nARjQqTMe6jHMbsJPEasDErBaFkH_UpIYkHhvJgmC",
+    new Blob([JSON.stringify(data)], { type: "application/json" })
+  );
 }
 
 document.addEventListener("visibilitychange", () => {
