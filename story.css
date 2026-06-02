@@ -1,7 +1,9 @@
 body {
-
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     min-height: 100vh;
+    overflow-x: hidden;
 
     background:
     radial-gradient(circle at 20% 20%, #2c2470, #05051b 70%);
@@ -17,9 +19,14 @@ body {
     align-items: center;
 }
 
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 .story-page {
 
-    width: 90%;
+   width: min(90%, 950px);;
     max-width: 950px;
 
     padding: 60px;
