@@ -374,37 +374,6 @@
     }
   );
 
-  window.addEventListener(
-    "pagehide",
-    event => {
-      if (visibleSince !== null) {
-        totalVisibleMilliseconds +=
-          Date.now() -
-          visibleSince;
-
-        visibleSince = null;
-      }
-
-      /*
-       * pagehide bruges kun som reserve,
-       * hvis visibilitychange ikke allerede
-       * har sendt SIDE SKJULT.
-       */
-      if (!hiddenEventSent) {
-        hiddenEventSent = true;
-
-        sendTrackingEvent(
-          "SIDE SKJULT",
-          {
-            savedInSafariCache:
-              event.persisted
-          },
-          true
-        );
-      }
-    }
-  );
-
   window.trackWebsiteEvent = (
     eventName,
     extra = {}
