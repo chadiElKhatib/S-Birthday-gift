@@ -51,6 +51,9 @@ birthdayTitle.appendChild(span);
 const knockSound = document.getElementById("knockSound");
 
 musicBtn.addEventListener("click", () => {
+  window.trackWebsiteEvent?.(
+  "FØDSELSDAGSGAVEN BLEV STARTET"
+);
 
   if (music.paused) {
     music.volume = 0;
@@ -388,63 +391,7 @@ if (currentSlide >= slides.length) {
 }
 
   showSlide(currentSlide);
-}
-
-const startTime = Date.now();
-
-const device = /Mobi|Android/i.test(navigator.userAgent)
-    ? "📱 Mobil"
-    : "💻 Computer";
-
-const time = new Date().toLocaleString("da-DK");
-
-if (!sessionStorage.getItem("visitSent")) {
-
-    sessionStorage.setItem("visitSent", "true");
-
-    fetch("https://discordapp.com/api/webhooks/1509934219260989501/LBWgdAZrwS9i2yFdfOkYOULcB49nARjQqTMe6jHMbsJPEasDErBaFkH_UpIYkHhvJgmC", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-  body: JSON.stringify({
-    embeds: [{
-        title: "🟢 Fødselsdagsgaven blev åbnet",
-        description: `${device}\n🕒 Tid: ${time}\n📄 Side: ${document.title}`,
-        color: 5763719
-    }]
-})
-    });
-}
-
-let leftSent = false;
-
-function sendLeftMessage() {
-    if (leftSent) return;
-    leftSent = true;
-
-    const seconds = Math.floor((Date.now() - startTime) / 1000);
-
-    fetch("https://discordapp.com/api/webhooks/1509934219260989501/LBWgdAZrwS9i2yFdfOkYOULcB49nARjQqTMe6jHMbsJPEasDErBaFkH_UpIYkHhvJgmC", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
- body: JSON.stringify({
-    embeds: [{
-        title: "🔴 Personen forlod fødselsdagsgaven",
-        description: `🕒 Varighed: ${seconds} sekunder`,
-        color: 15548997
-    }]
-})
-    });
-}
-
-document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") {
-        sendLeftMessage();
-    }
-});
+  }
 }
 
 function createParticles() {
@@ -465,6 +412,29 @@ function createParticles() {
 }
 
 createParticles();
+
+const storyButton =
+  document.getElementById("storyButton");
+
+if (storyButton) {
+  storyButton.addEventListener("click", event => {
+    event.preventDefault();
+
+    const destination = storyButton.href;
+
+    window.trackWebsiteEvent?.(
+      "STORY-KNAPPEN BLEV TRYKKET"
+    );
+
+    /*
+     * En kort forsinkelse hjælper beskeden med
+     * at blive sendt, inden story.html åbnes.
+     */
+    setTimeout(() => {
+      window.location.href = destination;
+    }, 250);
+  });
+}
 
 /*
 // SLET EFTER
