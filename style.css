@@ -142,22 +142,31 @@ body {
   justify-content: center;
   align-items: center;
   gap: 18px;
-  margin-top: 40px;
+  margin-top: 12px;
+  flex-wrap: wrap;
 }
 
 #musicBtn,
 .story-btn {
-  min-width: 220px;
   padding: 15px 28px;
-
   border: none;
   border-radius: 40px;
-
   font-size: 16px;
   cursor: pointer;
   text-decoration: none;
-
   transition: 0.3s ease;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#musicBtn {
+  min-width: 220px;
+}
+
+.story-btn {
+  min-width: 145px;
 }
 
 #musicBtn {

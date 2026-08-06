@@ -384,3 +384,19 @@
     );
   };
 })();
+
+const backButton = document.getElementById("backButton");
+
+if (backButton) {
+    backButton.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        const destination = backButton.href;
+
+        window.trackWebsiteEvent?.("TILBAGE-KNAPPEN BLEV TRYKKET");
+
+        setTimeout(() => {
+            window.location.href = destination;
+        }, 250);
+    });
+}
