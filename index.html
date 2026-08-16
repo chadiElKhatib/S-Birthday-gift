@@ -4,20 +4,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fødselsdagsgave</title>
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
   </head>
   <body data-page="forside-og-fødselsdagsgave">
     <div class="particles"></div>
     <div class="light-orb orb-one"></div>
     <div class="light-orb orb-two"></div>
+    <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
 
     <!-- INTRO -->
     <section class="hero">
-      <div class="wizard">
-        <div class="head"></div>
-        <div class="body"></div>
-        <div class="wand"></div>
-        <div class="sparkles"></div>
+      <div class="ignition">
+        <div class="ignition-core"></div>
+        <div class="ignition-ring ring-1"></div>
+        <div class="ignition-ring ring-2"></div>
+        <div class="ignition-ring ring-3"></div>
+        <div class="ignition-rays"></div>
       </div>
       <h1 id="birthdayTitle" class="curved-title"></h1>
 
@@ -47,11 +49,19 @@
       </div>
     </section>
 
+    <!-- MAGISK PORTAL-OVERGANG -->
+    <div id="portalOverlay" class="portal-overlay">
+      <div class="portal-ring"></div>
+      <div class="portal-ring portal-ring-2"></div>
+      <div class="portal-flash"></div>
+      <div class="portal-shards"></div>
+    </div>
+
     <!-- SLIDESHOW -->
     <section class="slideshow-section">
       <div class="slideshow">
         <div id="blurBackground"></div>
-        <img id="slideImage" src="billede-1.jpg" alt="Memory" />
+        <img id="slideImage" src="assets/images/billede-1.jpg" alt="Memory" />
 
         <video id="slideVideo" controls playsinline webkit-playsinline></video>
 
@@ -84,14 +94,19 @@
       <p>
         “Allah knows what the heart cannot always understand.” - Qur’an 2:216
       </p>
+
+      <div class="ending-buttons">
+        <button id="restartBtn" class="story-btn">↻ Se det igen</button>
+        <a href="story.html" class="story-btn">💬 Sidste ord</a>
+      </div>
     </section>
 
     <!-- MUSIC -->
     <audio id="bgMusic" loop>
-      <source src="Elissa - أنا سكتين.mp3" type="audio/mpeg" />
+      <source src="assets/audio/baggrundsmusik.mp3" type="audio/mpeg" />
     </audio>
 
-    <script src="tracker.js"></script>
-    <script src="script.js"></script>
+    <script src="assets/js/tracker.js"></script>
+    <script src="assets/js/script.js"></script>
   </body>
 </html>

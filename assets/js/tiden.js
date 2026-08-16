@@ -1,3 +1,26 @@
+function createTimeParticles() {
+  const container = document.querySelector(".time-particles");
+  if (!container) return;
+
+  for (let i = 0; i < 26; i++) {
+    const grain = document.createElement("span");
+
+    grain.classList.add("time-particle");
+
+    const size = 2 + Math.random() * 3;
+    grain.style.width = size + "px";
+    grain.style.height = size + "px";
+    grain.style.left = Math.random() * 100 + "vw";
+    grain.style.setProperty("--drift", Math.random() * 60 - 30 + "px");
+    grain.style.animationDuration = 10 + Math.random() * 14 + "s";
+    grain.style.animationDelay = Math.random() * 12 + "s";
+
+    container.appendChild(grain);
+  }
+}
+
+createTimeParticles();
+
 const breakupDate = new Date("2025-12-17T02:17:00");
 
 const monthsElement =
