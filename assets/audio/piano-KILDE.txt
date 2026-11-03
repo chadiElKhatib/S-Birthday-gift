@@ -1,0 +1,12 @@
+piano.mp3
+=========
+Stykke:   Erik Satie – Gymnopédie No. 1 ("Lent et douloureux"), 1888
+Optagelse: Robin Alciatore, via Musopen (musopen.org)
+Licens:   Public domain – frigivet til public domain af ophavspersonen
+          (selve kompositionen er også public domain).
+Kilde:    https://commons.wikimedia.org/wiki/File:Erik_Satie_-_gymnopedies_-_la_1_ere._lent_et_douloureux.ogg
+Fil:      MP3-udgave fra Wikimedia Commons (transcoded fra den originale .ogg)
+Hentet:   3. november 2026
+
+Må bruges frit, også uden at nævne kilden. Musopen sætter pris på
+en kreditering, så den står her og i en kommentar i story.html.

@@ -4,73 +4,101 @@
   const TRACKING_ENDPOINT =
     "https://birthday-tracker.chadi-kasswani51.workers.dev";
 
+  const OPENED_AFTER_MILLISECONDS = 3000;
+
+  // Korte fane-skift ignoreres, så Discord ikke bliver fyldt.
+  const MIN_HIDDEN_SECONDS_FOR_RETURN = 3;
+
   const pageName = document.body.dataset.page || "ukendt";
 
-  let sessionId = sessionStorage.getItem("trackingSessionId");
-
-  if (!sessionId) {
-    sessionId = crypto.randomUUID();
-
-    sessionStorage.setItem("trackingSessionId", sessionId);
+  function createId() {
+    try {
+      return crypto.randomUUID();
+    } catch {
+      return (
+        Date.now().toString(36) + "-" + Math.random().toString(36).slice(2)
+      );
+    }
   }
 
-  const pageViewId = crypto.randomUUID();
+  function getSessionId() {
+    try {
+      let id = sessionStorage.getItem("trackingSessionId");
 
-  let visibleSince = document.visibilityState === "visible" ? Date.now() : null;
+      if (!id) {
+        id = createId();
+        sessionStorage.setItem("trackingSessionId", id);
+      }
 
-  let totalVisibleMilliseconds = 0;
-  let maxScrollPercent = 0;
-  let interactionCount = 0;
+      return id;
+    } catch {
+      return createId();
+    }
+  }
 
-  let hiddenAt = null;
-  let hiddenEventSent = false;
-  let pageOpenedSent = false;
-
-  let lastVisibilityState = document.visibilityState;
+  const sessionId = getSessionId();
+  const pageViewId = createId();
 
   const device = /iPhone|iPad|Android|Mobi/i.test(navigator.userAgent)
     ? "📱 Mobil"
     : "💻 Computer";
 
-  function getBotInformation() {
-    const userAgent = navigator.userAgent.toLowerCase();
+  const BOT_PATTERNS = [
+    [/facebookexternalhit|facebot/i, "Messenger/Instagram/iMessage-forhåndsvisning"],
+    [/snap url preview/i, "Snapchat-forhåndsvisning"],
+    [/whatsapp/i, "WhatsApp-forhåndsvisning"],
+    [/twitterbot/i, "X/Twitter-forhåndsvisning"],
+    [/telegrambot/i, "Telegram-forhåndsvisning"],
+    [/discordbot/i, "Discord-forhåndsvisning"],
+    [/slackbot|slack-imgproxy/i, "Slack-forhåndsvisning"],
+    [/linkedinbot/i, "LinkedIn-forhåndsvisning"],
+    [/skypeuripreview/i, "Skype/Teams-forhåndsvisning"],
+    [/googlebot|google-inspectiontool|googleother/i, "Google"],
+    [/bingbot/i, "Bing"],
+    [/applebot/i, "Apple"],
+    [/headlesschrome|phantomjs|puppeteer|playwright/i, "Headless browser"],
+    [/\bbot\b|bot\/|crawler|spider|preview/i, "Ukendt robot"],
+  ];
 
-    const botNames = [
-      "googlebot",
-      "bingbot",
-      "discordbot",
-      "facebookexternalhit",
-      "twitterbot",
-      "linkedinbot",
-      "telegrambot",
-      "whatsapp",
-      "crawler",
-      "spider",
-      "preview",
-      "bot",
-    ];
+  function detectBot() {
+    const userAgent = navigator.userAgent;
 
-    const foundBot = botNames.find((name) => userAgent.includes(name));
+    for (const [pattern, name] of BOT_PATTERNS) {
+      if (pattern.test(userAgent)) {
+        return { isBot: true, name };
+      }
+    }
 
-    return {
-      possibleBot: Boolean(foundBot),
-      botName: foundBot || "ingen kendt bot",
-    };
+    if (navigator.webdriver === true) {
+      return { isBot: true, name: "Automatiseret browser" };
+    }
+
+    return { isBot: false, name: "ingen kendt bot" };
   }
 
-  function getVisibleSeconds() {
+  const bot = detectBot();
+
+  let visibleSince = document.visibilityState === "visible" ? Date.now() : null;
+  let totalVisibleMilliseconds = 0;
+  let maxScrollPercent = 0;
+  let interactionCount = 0;
+
+  let pageOpenedSent = false;
+  let leftEventSent = false;
+  let hiddenAt = null;
+  let openTimer = null;
+
+  function getVisibleMilliseconds() {
     let milliseconds = totalVisibleMilliseconds;
 
     if (visibleSince !== null) {
       milliseconds += Date.now() - visibleSince;
     }
 
-    return Math.floor(milliseconds / 1000);
+    return milliseconds;
   }
 
   function buildTrackingData(eventName, extra = {}) {
-    const botInformation = getBotInformation();
-
     return {
       event: eventName,
       page: pageName,
@@ -81,26 +109,22 @@
       device,
 
       time: new Date().toLocaleString("da-DK"),
-
       timestamp: new Date().toISOString(),
 
-      visibleSeconds: getVisibleSeconds(),
+      visibleSeconds: Math.floor(getVisibleMilliseconds() / 1000),
 
       maxScrollPercent,
       interactionCount,
 
       visibilityState: document.visibilityState,
 
-      possibleBot: botInformation.possibleBot,
-
-      botName: botInformation.botName,
+      possibleBot: bot.isBot,
+      botName: bot.name,
 
       userAgent: navigator.userAgent,
-
       referrer: document.referrer || "direkte link",
 
       screenWidth: window.screen.width,
-
       screenHeight: window.screen.height,
 
       ...extra,
@@ -108,15 +132,11 @@
   }
 
   async function sendTrackingEvent(eventName, extra = {}, useBeacon = false) {
-    const data = buildTrackingData(eventName, extra);
-
-    const jsonData = JSON.stringify(data);
-
-    console.log("Tracking:", data);
-
     if (!TRACKING_ENDPOINT) {
       return;
     }
+
+    const jsonData = JSON.stringify(buildTrackingData(eventName, extra));
 
     try {
       if (useBeacon && navigator.sendBeacon) {
@@ -124,20 +144,16 @@
           type: "text/plain;charset=UTF-8",
         });
 
-        const beaconSent = navigator.sendBeacon(TRACKING_ENDPOINT, blob);
-
-        if (beaconSent) {
+        if (navigator.sendBeacon(TRACKING_ENDPOINT, blob)) {
           return;
         }
       }
 
       const response = await fetch(TRACKING_ENDPOINT, {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
         },
-
         body: jsonData,
         keepalive: true,
       });
@@ -148,6 +164,94 @@
     } catch (error) {
       console.error("Trackingfejl:", error);
     }
+  }
+
+  window.trackWebsiteEvent = (eventName, extra = {}) => {
+    return sendTrackingEvent(eventName, extra);
+  };
+
+  if (bot.isBot) {
+    sendTrackingEvent(`🤖 ROBOT / LINK-FORHÅNDSVISNING: ${bot.name}`);
+    return;
+  }
+
+  function markOpened() {
+    if (pageOpenedSent || document.visibilityState !== "visible") {
+      return;
+    }
+
+    pageOpenedSent = true;
+    clearTimeout(openTimer);
+
+    sendTrackingEvent("SIDE ÅBNET");
+  }
+
+  // Tæller kun den tid, siden faktisk har været synlig.
+  function scheduleOpenedCheck() {
+    clearTimeout(openTimer);
+
+    if (pageOpenedSent || document.visibilityState !== "visible") {
+      return;
+    }
+
+    const remaining = OPENED_AFTER_MILLISECONDS - getVisibleMilliseconds();
+
+    openTimer = setTimeout(markOpened, Math.max(0, remaining));
+  }
+
+  // "Forladt" sendes kun, hvis "åbnet" er sendt først – og kun én gang.
+  function markLeft() {
+    if (!pageOpenedSent || leftEventSent) {
+      return;
+    }
+
+    leftEventSent = true;
+
+    sendTrackingEvent(
+      "SIDE SKJULT",
+      {
+        explanation:
+          "Browseren blev minimeret, fanen blev skiftet, en anden app blev åbnet, eller telefonen blev låst",
+      },
+      true,
+    );
+  }
+
+  function handleHidden() {
+    if (visibleSince !== null) {
+      totalVisibleMilliseconds += Date.now() - visibleSince;
+      visibleSince = null;
+    }
+
+    clearTimeout(openTimer);
+
+    if (hiddenAt === null) {
+      hiddenAt = Date.now();
+    }
+
+    markLeft();
+  }
+
+  function handleVisible() {
+    if (visibleSince === null) {
+      visibleSince = Date.now();
+    }
+
+    const hiddenSeconds = hiddenAt
+      ? Math.floor((Date.now() - hiddenAt) / 1000)
+      : 0;
+
+    hiddenAt = null;
+
+    if (leftEventSent) {
+      leftEventSent = false;
+
+      if (hiddenSeconds >= MIN_HIDDEN_SECONDS_FOR_RETURN) {
+        sendTrackingEvent("SIDE TILBAGE", { hiddenSeconds });
+      }
+    }
+
+    scheduleOpenedCheck();
   }
 
   function updateScrollPercentage() {
@@ -169,98 +273,45 @@
     );
   }
 
-  window.addEventListener("scroll", updateScrollPercentage, {
-    passive: true,
-  });
+  window.addEventListener(
+    "scroll",
+    () => {
+      updateScrollPercentage();
+      markOpened();
+    },
+    { passive: true },
+  );
 
-  /*
-   * capture: true gør, at klikket
-   * tælles før knapkoden sender eventet.
-   */
   ["click", "touchstart", "keydown"].forEach((eventName) => {
     document.addEventListener(
       eventName,
       () => {
         interactionCount++;
+        markOpened();
       },
-      {
-        passive: true,
-        capture: true,
-      },
+      { passive: true, capture: true },
     );
   });
 
-  window.addEventListener("pageshow", (event) => {
-    visibleSince = Date.now();
-
-    if (pageOpenedSent) {
-      return;
-    }
-
-    pageOpenedSent = true;
-
-    sendTrackingEvent("SIDE ÅBNET", {
-      restoredFromCache: event.persisted,
-    });
-  });
-
   document.addEventListener("visibilitychange", () => {
-    const newState = document.visibilityState;
-
-    /*
-     * Stop hvis browseren sender
-     * samme status flere gange.
-     */
-    if (newState === lastVisibilityState) {
-      return;
+    if (document.visibilityState === "hidden") {
+      handleHidden();
+    } else {
+      handleVisible();
     }
-
-    if (newState === "hidden") {
-      if (visibleSince !== null) {
-        totalVisibleMilliseconds += Date.now() - visibleSince;
-
-        visibleSince = null;
-      }
-
-      hiddenAt = Date.now();
-      hiddenEventSent = true;
-
-      sendTrackingEvent(
-        "SIDE SKJULT",
-        {
-          explanation:
-            "Browseren blev minimeret, fanen blev skiftet, en anden app blev åbnet, eller telefonen blev låst",
-        },
-        true,
-      );
-    }
-
-    if (newState === "visible") {
-      const hiddenSeconds = hiddenAt
-        ? Math.floor((Date.now() - hiddenAt) / 1000)
-        : 0;
-
-      visibleSince = Date.now();
-
-      hiddenEventSent = false;
-
-      /*
-       * Ignorér meget korte skift,
-       * så Discord ikke bliver fyldt.
-       */
-      if (hiddenSeconds >= 3) {
-        sendTrackingEvent("SIDE TILBAGE", {
-          hiddenSeconds,
-        });
-      }
-    }
-
-    lastVisibilityState = newState;
   });
 
-  window.trackWebsiteEvent = (eventName, extra = {}) => {
-    return sendTrackingEvent(eventName, extra);
-  };
+  // pagehide fanger lukning af fanen, også hvor visibilitychange udebliver.
+  window.addEventListener("pagehide", handleHidden);
+
+  // Siden blev genskabt fra browserens cache (frem/tilbage-knap).
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted && document.visibilityState === "visible") {
+      handleVisible();
+    }
+  });
+
+  scheduleOpenedCheck();
 })();
 
 const backButton = document.getElementById("backButton");

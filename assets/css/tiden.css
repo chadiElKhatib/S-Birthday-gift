@@ -1,17 +1,24 @@
 /* ============================================================
    "TID SIDEN" — nedtaelling
-   Palet: kold nat-slate/teal, varmt sand-guld i tallene
-   Signatur: sandkorn der langsomt driver nedad, som i et timeglas,
-   og sekund-tallet der pulserer let som et ur der tikker.
+   Regn på en rude om natten: byens lys er sløret bag glasset,
+   dråber løber ned og samler sig. Samme mørkeblå tusmørke som
+   kapitel III i slideshowet, med varmt guld i tallene.
    ============================================================ */
 
 :root {
-  --slate-a: #0f2138;
-  --slate-b: #040910;
-  --teal: #6fd6c4;
-  --teal-soft: #a9ece0;
-  --sand: #d9b083;
-  --mist: #cbd5e1;
+  --night-a: #101d40;
+  --night-b: #04070f;
+  --gold: #e8c48a;
+  --gold-soft: #ffe0aa;
+  --mist: #c9d3ea;
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --full-height: 100vh;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --full-height: 100dvh;
+  }
 }
 
 * {
@@ -37,72 +44,155 @@ body {
   font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   color: white;
   background:
-    radial-gradient(ellipse 700px 500px at 50% 0%, rgba(111, 214, 196, 0.08), transparent 60%),
-    radial-gradient(circle at top, var(--slate-a), var(--slate-b) 75%);
+    radial-gradient(ellipse 100% 60% at 50% 100%, rgba(60, 50, 90, 0.55), transparent 70%),
+    linear-gradient(180deg, #03050c 0%, var(--night-a) 55%, #1a1a33 100%);
+  background-color: var(--night-b);
+  background-attachment: fixed;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------------- BYENS LYS ---------------- */
+.city-lights {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
   overflow: hidden;
 }
 
-/* ---------------- SAND-DRIFT PARTIKLER ---------------- */
-.time-particle {
-  position: fixed;
+.city-light {
+  position: absolute;
   border-radius: 50%;
-  background: var(--sand);
-  filter: blur(0.5px);
-  pointer-events: none;
-  opacity: 0.6;
-  animation: sandFall linear infinite;
-  z-index: 0;
+  background: radial-gradient(
+    circle,
+    rgba(var(--color), 0.9) 0%,
+    rgba(var(--color), 0.35) 35%,
+    rgba(var(--color), 0) 70%
+  );
+  opacity: var(--peak, 0.4);
+  will-change: transform, opacity;
+  animation: cityGlow ease-in-out infinite alternate;
 }
 
-@keyframes sandFall {
-  from { transform: translateY(-10vh) translateX(0); opacity: 0; }
-  10% { opacity: 0.7; }
-  90% { opacity: 0.5; }
-  to { transform: translateY(110vh) translateX(var(--drift, 20px)); opacity: 0; }
+/* Lysene "ånder" og flytter sig en anelse – som når regnen løber over glasset */
+@keyframes cityGlow {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: var(--peak, 0.4);
+  }
+  to {
+    transform: translate3d(var(--dx, 8px), 4px, 0) scale(1.08);
+    opacity: calc(var(--peak, 0.4) * 0.6);
+  }
+}
+
+/* Et par lygter, der glider forbi nede på gaden */
+.car-lights {
+  position: absolute;
+  left: 0;
+  width: 26vw;
+  height: 70px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    rgba(var(--color), 0.45) 0%,
+    rgba(var(--color), 0.12) 45%,
+    transparent 70%
+  );
+  animation: carPass linear forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes carPass {
+  0% { transform: translate3d(var(--from), 0, 0); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translate3d(var(--to), 0, 0); opacity: 0; }
+}
+
+/* ---------------- RUDEN ---------------- */
+.rain-glass {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Lidt dug i kanterne af ruden og et svagt skær på glasset */
+.glass-sheen {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 90% at 50% 45%, transparent 55%, rgba(170, 185, 220, 0.12) 100%),
+    linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.035) 45%, transparent 60%);
 }
 
 .time-page {
   position: relative;
   z-index: 2;
-  min-height: 100dvh;
+  min-height: var(--full-height);
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  padding: 30px 20px;
+  padding: 30px 20px 90px;
   text-align: center;
 }
 
+/* Kortet har ikke backdrop-filter: at sløre regnen bag det i hver frame
+   ville være for tungt for iPhone. I stedet er det lidt mere dækkende. */
 .time-card {
   width: 100%;
   max-width: 950px;
 
   padding: 50px 35px;
 
-  border: 1px solid rgba(111, 214, 196, 0.15);
+  border: 1px solid rgba(232, 196, 138, 0.16);
   border-radius: 32px;
 
-  background: rgba(15, 33, 56, 0.4);
-  backdrop-filter: blur(16px);
+  background:
+    linear-gradient(180deg, rgba(14, 24, 52, 0.58), rgba(8, 13, 30, 0.66));
 
   box-shadow:
-    0 0 35px rgba(111, 214, 196, 0.14),
-    0 0 90px rgba(15, 33, 56, 0.5);
+    0 0 40px rgba(232, 196, 138, 0.07),
+    0 30px 90px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
   opacity: 0;
   transform: translateY(24px);
-  animation: cardIn 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+  animation: cardIn 1.4s var(--ease-soft) forwards 0.2s;
 }
 
 @keyframes cardIn {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Boksene kommer ind én ad gangen, efter kortet */
+.time-box {
+  opacity: 0;
+  animation: boxIn 0.9s var(--ease-soft) forwards;
+}
+
+.time-box:nth-child(1) { animation-delay: 0.7s; }
+.time-box:nth-child(2) { animation-delay: 0.82s; }
+.time-box:nth-child(3) { animation-delay: 0.94s; }
+.time-box:nth-child(4) { animation-delay: 1.06s; }
+.time-box:nth-child(5) { animation-delay: 1.18s; }
+
+@keyframes boxIn {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .small-title {
   margin-bottom: 12px;
 
-  color: var(--teal-soft);
+  color: var(--gold);
   font-size: 15px;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -110,10 +200,11 @@ body {
 
 .time-card h1 {
   font-size: clamp(34px, 6vw, 62px);
+  font-weight: normal;
 
   text-shadow:
-    0 0 18px rgba(111, 214, 196, 0.3),
-    0 0 45px rgba(111, 214, 196, 0.15);
+    0 0 18px rgba(255, 224, 170, 0.28),
+    0 0 45px rgba(110, 140, 210, 0.25);
 }
 
 .date-text {
@@ -131,37 +222,92 @@ body {
 }
 
 .time-box {
+  position: relative;
   padding: 22px 12px;
 
   border-radius: 22px;
-  background: rgba(111, 214, 196, 0.06);
-  border: 1px solid rgba(111, 214, 196, 0.1);
+  background: rgba(19, 34, 74, 0.6);
+  border: 1px solid rgba(232, 196, 138, 0.12);
 
   box-shadow:
     inset 0 0 18px rgba(255, 255, 255, 0.02),
-    0 0 20px rgba(111, 214, 196, 0.08);
-
-  transition: transform 0.3s ease;
+    0 0 20px rgba(232, 196, 138, 0.05);
 }
 
-.time-box span {
+/* Et blødt guldskær i boksen, når dens tal skifter */
+.time-box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 26px rgba(255, 224, 170, 0.22),
+    0 0 26px rgba(232, 196, 138, 0.2);
+  opacity: 0;
+}
+
+.time-box.changed::after {
+  animation: boxGlow 1.6s ease-out;
+}
+
+/* Sekund-boksen ånder stille, som et ur der tikker */
+.time-box:last-child::after {
+  animation: secondBreath 2s ease-in-out infinite;
+}
+
+@keyframes boxGlow {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes secondBreath {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.45; }
+}
+
+.time-box > span {
   display: block;
+  height: 1.2em;
+  line-height: 1.2em;
 
   font-size: clamp(28px, 5vw, 50px);
   font-weight: bold;
-  color: var(--sand);
-  text-shadow: 0 0 16px rgba(217, 176, 131, 0.35);
-  animation: secondPulse 1s ease-in-out infinite;
+  color: var(--gold-soft);
+  text-shadow: 0 0 16px rgba(232, 196, 138, 0.4);
+  font-variant-numeric: tabular-nums;
 }
 
-/* Kun sekund-boksen skal have det tikkende pulse-praeg, resten skal staa roligt */
-.time-box:not(:last-child) span {
-  animation: none;
+/* ---------------- RULLENDE CIFRE ---------------- */
+.digit {
+  position: relative;
+  display: inline-block;
 }
 
-@keyframes secondPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.08); }
+.d-cur {
+  display: inline-block;
+}
+
+.d-in {
+  animation: digitIn 0.7s var(--ease-soft) both;
+}
+
+.d-out {
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: digitOut 0.55s ease-in both;
+}
+
+@keyframes digitIn {
+  from { opacity: 0; transform: translateY(-0.45em) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes digitOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(0.45em) scale(0.94); }
 }
 
 .time-box p {
@@ -194,20 +340,31 @@ body {
   text-decoration: none;
   font-family: inherit;
 
-  background: rgba(111, 214, 196, 0.08);
-  border: 1px solid rgba(111, 214, 196, 0.15);
-  box-shadow: 0 0 18px rgba(111, 214, 196, 0.12);
+  background: rgba(232, 196, 138, 0.08);
+  border: 1px solid rgba(232, 196, 138, 0.2);
+  box-shadow: 0 0 18px rgba(232, 196, 138, 0.1);
 
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.45s var(--ease-soft),
+    box-shadow 0.45s ease,
+    background-color 0.45s ease;
 }
 
-.back-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 22px rgba(111, 214, 196, 0.22);
+@media (hover: hover) {
+  .back-button:hover {
+    transform: translateY(-3px);
+    background-color: rgba(232, 196, 138, 0.14);
+    box-shadow: 0 6px 22px rgba(232, 196, 138, 0.2);
+  }
+}
+
+.back-button:active {
+  transform: scale(0.97);
+  transition-duration: 0.12s;
 }
 
 .back-button:focus-visible {
-  outline: 2px solid var(--teal-soft);
+  outline: 2px solid var(--gold-soft);
   outline-offset: 3px;
 }
 
@@ -218,11 +375,78 @@ body {
   justify-content: center;
 }
 
-@media (max-width: 700px) {
-  body {
-    overflow-y: auto;
-  }
+/* ---------------- LYD-KNAP ---------------- */
+.sound-control {
+  position: fixed;
+  left: calc(16px + env(safe-area-inset-left, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 50;
 
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sound-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 17px;
+  line-height: 1;
+  color: white;
+  cursor: pointer;
+
+  background: rgba(8, 13, 30, 0.75);
+  border: 1px solid rgba(232, 196, 138, 0.22);
+  box-shadow: 0 0 16px rgba(232, 196, 138, 0.12);
+
+  opacity: 0.7;
+  transition:
+    opacity 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.sound-button.is-on {
+  opacity: 0.85;
+}
+
+.sound-button:focus-visible {
+  outline: 2px solid var(--gold-soft);
+  outline-offset: 3px;
+}
+
+.sound-hint {
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: rgba(201, 211, 234, 0.75);
+  transition: opacity 0.8s ease;
+  animation: hintBreathe 3.4s ease-in-out 2s infinite;
+}
+
+.sound-hint.is-hidden {
+  opacity: 0;
+  animation: none;
+  pointer-events: none;
+}
+
+@keyframes hintBreathe {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 0.35; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .city-light,
+  .sound-hint {
+    animation: none;
+  }
+}
+
+@media (max-width: 700px) {
   .time-card {
     padding: 35px 18px;
   }

@@ -4,13 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#070d22" />
+
     <title>Tid siden</title>
 
     <link rel="stylesheet" href="assets/css/tiden.css" />
+    <script src="assets/js/page-transition.js"></script>
   </head>
 
   <body data-page="tid-siden">
-    <div class="time-particles"></div>
+    <!-- Byens lys, sløret bag en våd rude om natten -->
+    <div class="city-lights" aria-hidden="true"></div>
+    <canvas id="rainGlass" class="rain-glass" aria-hidden="true"></canvas>
+    <div class="glass-sheen" aria-hidden="true"></div>
 
     <main class="time-page">
       <section class="time-card">
@@ -56,6 +63,19 @@
     </main>
 
     <script src="assets/js/tracker.js"></script>
+    <div class="sound-control">
+      <button
+        id="soundButton"
+        class="sound-button"
+        type="button"
+        aria-label="Slå lyden til"
+      >
+        🔇
+      </button>
+      <span id="soundHint" class="sound-hint">Tryk for regnlyd</span>
+    </div>
+
+    <script src="assets/js/ambient-audio.js"></script>
     <script src="assets/js/tiden.js"></script>
   </body>
 </html>

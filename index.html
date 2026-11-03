@@ -1,17 +1,25 @@
+<!doctype html>
 <html lang="da">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0a0410" />
     <title>Fødselsdagsgave</title>
 
     <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="assets/js/page-transition.js"></script>
   </head>
   <body data-page="forside-og-fødselsdagsgave">
     <div class="particles"></div>
     <div class="light-orb orb-one"></div>
     <div class="light-orb orb-two"></div>
-    <div class="progress-track">
+    <div class="progress-track" aria-hidden="true">
       <div id="progressFill" class="progress-fill"></div>
+      <div id="progressMarkers" class="progress-markers"></div>
     </div>
 
     <!-- INTRO -->
@@ -23,7 +31,11 @@
         <div class="ignition-ring ring-3"></div>
         <div class="ignition-rays"></div>
       </div>
-      <h1 id="birthdayTitle" class="curved-title"></h1>
+      <h1
+        id="birthdayTitle"
+        class="curved-title"
+        aria-label="Tillykke med fødselsdagen"
+      ></h1>
 
       <div class="intro-content">
         <p class="intro-text">
@@ -51,28 +63,84 @@
       </div>
     </section>
 
-    <!-- MAGISK PORTAL-OVERGANG -->
-    <div id="portalOverlay" class="portal-overlay">
-      <div class="portal-ring"></div>
-      <div class="portal-ring portal-ring-2"></div>
-      <div class="portal-flash"></div>
-      <div class="portal-shards"></div>
-    </div>
+    <!-- STEARINLYS: nedtælling, og man puster lyset ud for at starte -->
+    <section id="candleStage" class="candle-stage" aria-live="polite">
+      <div class="candle-halo" aria-hidden="true"></div>
+
+      <p id="countdown" class="countdown" aria-hidden="true"></p>
+
+      <button
+        id="candleButton"
+        class="big-candle"
+        type="button"
+        aria-label="Pust lyset ud"
+        disabled
+      >
+        <span class="candle-glow"></span>
+        <span class="candle-flame"></span>
+        <span class="candle-wick"></span>
+        <span class="candle-body"></span>
+        <span class="candle-smoke"></span>
+      </button>
+
+      <p id="candleHint" class="candle-hint">Tryk på lyset</p>
+    </section>
 
     <!-- SLIDESHOW -->
-    <section class="slideshow-section">
-      <div class="slideshow">
-        <div id="blurBackground"></div>
-        <img id="slideImage" src="assets/images/billede-1.jpg" alt="Memory" />
+    <section class="slideshow-section" data-theme="gold">
+      <div class="chapter-bg theme-gold" aria-hidden="true"></div>
+      <div class="chapter-bg theme-violet" aria-hidden="true"></div>
+      <div class="chapter-bg theme-dusk" aria-hidden="true"></div>
+      <div class="chapter-bg theme-dawn" aria-hidden="true"></div>
+      <div id="chapterAmbience" class="chapter-ambience" aria-hidden="true"></div>
 
-        <video id="slideVideo" controls playsinline webkit-playsinline></video>
+      <div id="slideshow" class="slideshow" data-transition="zoom">
+        <div id="blurBackground" aria-hidden="true"></div>
+
+        <div id="mediaFrame" class="media-frame">
+          <img id="slideImage" src="assets/images/billede-1.jpg" alt="Memory" />
+
+          <video
+            id="slideVideo"
+            playsinline
+            webkit-playsinline
+            preload="metadata"
+          ></video>
+        </div>
 
         <div class="quote-box">
           <p id="slideQuote"></p>
           <p id="slideSubText"></p>
         </div>
       </div>
+
+      <div id="chapterCard" class="chapter-card" aria-live="polite">
+        <p id="chapterNumber" class="chapter-number"></p>
+        <h2 id="chapterTitle" class="chapter-title"></h2>
+        <span class="chapter-line" aria-hidden="true"></span>
+      </div>
+
+      <div id="pauseIcon" class="pause-icon" aria-hidden="true"></div>
+
+      <button
+        id="videoSoundBtn"
+        class="video-sound"
+        type="button"
+        aria-label="Slå lyd til på videoen"
+      >
+        🔇
+      </button>
     </section>
+
+    <!-- SOLOPGANG bag afslutningen: natten lysner langsomt -->
+    <div id="dawnSky" class="dawn-sky" aria-hidden="true">
+      <div class="sky-dawn"></div>
+      <div class="sky-sun"></div>
+      <div class="sky-night"></div>
+      <div class="sky-stars"></div>
+      <div class="shooting-star"></div>
+      <div class="sky-haze"></div>
+    </div>
 
     <!-- FINAL MESSAGE -->
     <section class="ending-section">
@@ -97,14 +165,58 @@
         “Allah knows what the heart cannot always understand.” - Qur’an 2:216
       </p>
 
+      <div class="gallery-wrap">
+        <h2 class="gallery-title">Alle minderne</h2>
+        <div id="gallery" class="gallery"></div>
+      </div>
+
       <div class="ending-buttons">
         <button id="restartBtn" class="story-btn">↻ Se det igen</button>
         <a href="story.html" class="story-btn">💬 Sidste ord</a>
       </div>
     </section>
 
+    <!-- GALLERI: stort billede -->
+    <div
+      id="lightbox"
+      class="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Billede"
+      hidden
+    >
+      <button class="lightbox-close" type="button" aria-label="Luk">✕</button>
+      <button class="lightbox-prev" type="button" aria-label="Forrige">
+        ‹
+      </button>
+
+      <figure class="lightbox-figure">
+        <img id="lightboxImage" alt="Memory" />
+        <video
+          id="lightboxVideo"
+          controls
+          playsinline
+          webkit-playsinline
+          preload="metadata"
+          hidden
+        ></video>
+        <figcaption id="lightboxQuote"></figcaption>
+      </figure>
+
+      <button class="lightbox-next" type="button" aria-label="Næste">›</button>
+    </div>
+
+    <button
+      id="musicToggle"
+      class="music-toggle"
+      type="button"
+      aria-label="Slå musik fra"
+    >
+      🔊
+    </button>
+
     <!-- MUSIC -->
-    <audio id="bgMusic" loop>
+    <audio id="bgMusic" loop preload="auto">
       <source src="assets/audio/baggrundsmusik.mp3" type="audio/mpeg" />
     </audio>
 

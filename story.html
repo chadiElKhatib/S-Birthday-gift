@@ -3,30 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#12053b" />
+    <meta name="theme-color" content="#0d0609" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
     />
 
+    <meta name="robots" content="noindex, nofollow" />
+
     <title>Personligt</title>
 
     <link rel="stylesheet" href="assets/css/story.css" />
+    <script src="assets/js/page-transition.js"></script>
   </head>
 
   <body data-page="story">
     <div class="story-particles"></div>
 
     <div class="story-header-scrim"></div>
-    <div class="candle"><div class="flame"></div></div>
+    <div class="reading-progress" aria-hidden="true"></div>
+    <div class="candle-light" aria-hidden="true"></div>
+    <div class="paper-flicker" aria-hidden="true"></div>
+    <div id="motes" class="motes" aria-hidden="true"></div>
+    <div class="candle" aria-hidden="true">
+      <div class="flame"></div>
+      <div class="wick"></div>
+      <div class="wax"></div>
+    </div>
 
     <nav class="story-nav">
       <a href="index.html" id="backButton" class="nav-btn">Tilbage</a>
       <a href="tiden.html" class="nav-btn">⏳ Tid siden</a>
     </nav>
 
-    <section class="story-page">
+    <section id="top" class="story-page">
       <h1>Hvis du læser det her...</h1>
 
       <p>
@@ -448,7 +459,31 @@
 
     <a href="#top" id="toTopBtn" class="to-top" aria-label="Til toppen">↑</a>
 
+    <div class="sound-control">
+      <button
+        id="soundButton"
+        class="sound-button"
+        type="button"
+        aria-label="Slå lyden til"
+      >
+        🔇
+      </button>
+      <span id="soundHint" class="sound-hint">Tryk for musik</span>
+    </div>
+
+    <!--
+      Musik: Erik Satie – Gymnopédie No. 1 ("Lent et douloureux"), 1888.
+      Optagelse: Robin Alciatore via Musopen (musopen.org).
+      Licens: Public domain – frigivet til public domain af ophavspersonen.
+      Kilde: https://commons.wikimedia.org/wiki/File:Erik_Satie_-_gymnopedies_-_la_1_ere._lent_et_douloureux.ogg
+      Se også assets/audio/piano-KILDE.txt
+    -->
+    <audio id="pianoMusic" loop preload="auto">
+      <source src="assets/audio/piano.mp3" type="audio/mpeg" />
+    </audio>
+
     <script src="assets/js/tracker.js"></script>
+    <script src="assets/js/ambient-audio.js"></script>
     <script src="assets/js/story.js"></script>
   </body>
 </html>

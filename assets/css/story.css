@@ -1,17 +1,22 @@
 /* ============================================================
    "SIDSTE ORD" — det personlige brev
-   Palet: mørk plum/aubergine nat, varm rav-glød som et stearinlys
-   Signatur: teksten folder sig ind saetning for saetning,
-   som om man laeser et brev ved levende lys.
+   Et varmt, cremefarvet stykke brevpapir i et mørkt rum,
+   oplyst af et stearinlys øverst – samme lys som i starten
+   af slideshowet. Teksten folder sig ind afsnit for afsnit.
    ============================================================ */
 
 :root {
-  --plum-a: #2c1620;
-  --plum-b: #0d0609;
+  --room-a: #2a1a10;
+  --room-b: #0b0705;
   --ember: #e8a97a;
   --ember-soft: #f3cba3;
-  --rose: #d99aa0;
+  --paper-a: #f8f0e2;
+  --paper-b: #f0e2cb;
+  --ink: #3a2a21;
+  --ink-soft: #5b463a;
+  --ink-rose: #8a4c42;
   --parchment: #efe2da;
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
@@ -28,6 +33,10 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html, body {
   max-width: 100%;
   overflow-x: hidden;
@@ -35,15 +44,20 @@ html, body {
 
 body {
   min-height: 100vh;
+  padding: 112px 0 90px;
 
+  /* Et mørkt rum, hvor lyset kommer fra stearinlyset øverst */
   background:
-    radial-gradient(circle at 20% 15%, rgba(232, 169, 122, 0.10), transparent 55%),
-    radial-gradient(circle at 80% 85%, rgba(217, 154, 160, 0.08), transparent 55%),
-    radial-gradient(circle at 50% 50%, var(--plum-a), var(--plum-b) 75%);
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(232, 169, 122, 0.22), transparent 65%),
+    radial-gradient(ellipse at 50% 30%, var(--room-a), var(--room-b) 80%);
+  background-color: var(--room-b);
+  background-attachment: fixed;
 
-  color: var(--parchment);
+  color: var(--ink);
 
   font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 
   display: flex;
   justify-content: center;
@@ -55,16 +69,35 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 130px;
+  height: 104px;
   z-index: 40;
   pointer-events: none;
 
   background: linear-gradient(
     to bottom,
-    rgba(13, 6, 9, 0.92) 0%,
-    rgba(13, 6, 9, 0.55) 55%,
+    rgba(11, 7, 5, 0.94) 0%,
+    rgba(11, 7, 5, 0.7) 55%,
     transparent 100%
   );
+}
+
+/* ---------------- LÆSE-FREMGANG ----------------
+   En tynd rav-linje øverst, der vokser mens man læser. */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 60;
+  pointer-events: none;
+
+  background: linear-gradient(90deg, #c98a7a, var(--ember-soft));
+  box-shadow: 0 0 10px rgba(232, 169, 122, 0.6);
+
+  transform: scaleX(var(--read-progress, 0));
+  transform-origin: left center;
+  will-change: transform;
 }
 
 /* ---------------- TOP NAV ---------------- */
@@ -79,6 +112,10 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+
+  /* Animeres på containeren, så knappernes egen hover-bevægelse virker */
+  opacity: 0;
+  animation: fadeDown 1s var(--ease-soft) 0.4s forwards;
 }
 
 .nav-btn {
@@ -96,16 +133,28 @@ body {
   cursor: pointer;
   border: 1px solid rgba(240, 226, 218, 0.15);
 
-  background: rgba(20, 10, 14, 0.45);
+  background: rgba(20, 12, 8, 0.55);
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 0 16px rgba(232, 169, 122, 0.12);
 
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.45s var(--ease-soft),
+    box-shadow 0.45s ease,
+    background-color 0.45s ease;
 }
 
-.nav-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(232, 169, 122, 0.22);
+@media (hover: hover) {
+  .nav-btn:hover {
+    transform: translateY(-2px);
+    background-color: rgba(34, 20, 14, 0.7);
+    box-shadow: 0 6px 22px rgba(232, 169, 122, 0.22);
+  }
+}
+
+.nav-btn:active {
+  transform: scale(0.97);
+  transition-duration: 0.12s;
 }
 
 .nav-btn:focus-visible {
@@ -113,93 +162,274 @@ body {
   outline-offset: 3px;
 }
 
-/* ---------------- CANDLE FLAME (signatur-element) ---------------- */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------- STEARINLYSET ----------------
+   Samme lys som i starten af slideshowet, bare mindre. */
 .candle {
   position: fixed;
-  top: 4px;
+  top: 18px;
   left: 50%;
-  transform: translateX(-50%);
-  width: 8px;
-  height: 18px;
+  width: 20px;
+  height: 62px;
+  margin-left: -10px;
   z-index: 46;
   pointer-events: none;
 }
 
-.candle .flame {
+.candle .wax {
   position: absolute;
   bottom: 0;
   left: 50%;
-  width: 8px;
-  height: 16px;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse at 50% 80%, #fff6dc 0%, var(--ember-soft) 35%, var(--ember) 60%, transparent 80%);
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  filter: blur(0.4px);
-  box-shadow: 0 0 16px 4px rgba(232, 169, 122, 0.55);
-  animation: flicker 2.6s ease-in-out infinite;
+  width: 14px;
+  height: 30px;
+  margin-left: -7px;
+  border-radius: 3px 3px 2px 2px;
+  background: linear-gradient(90deg, #cdb79e 0%, #f4e6d2 40%, #fbf1e3 55%, #d9c4aa 100%);
+  box-shadow: inset 0 -6px 8px rgba(80, 50, 30, 0.25);
 }
 
+.candle .wick {
+  position: absolute;
+  bottom: 29px;
+  left: 50%;
+  width: 2px;
+  height: 6px;
+  margin-left: -1px;
+  background: #3a2718;
+}
+
+.candle .flame {
+  position: absolute;
+  bottom: 33px;
+  left: 50%;
+  width: 11px;
+  height: 24px;
+  margin-left: -5.5px;
+  background: radial-gradient(ellipse at 50% 78%, #fffbea 0%, #ffe7b0 24%, #ffbf6e 50%, rgba(240, 130, 60, 0.85) 68%, transparent 82%);
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  box-shadow:
+    0 0 16px 5px rgba(255, 180, 100, 0.5),
+    0 0 46px 16px rgba(255, 150, 80, 0.18);
+  transform-origin: 50% 100%;
+  will-change: transform, opacity;
+  animation: flicker 3.4s ease-in-out infinite;
+}
+
+/* Lidt uregelmæssig flamme, så den ligner levende lys */
 @keyframes flicker {
-  0%, 100% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 1; }
-  25% { transform: translateX(-52%) scale(0.97, 1.04) rotate(-2deg); opacity: 0.92; }
-  50% { transform: translateX(-48%) scale(1.03, 0.98) rotate(2deg); opacity: 1; }
-  75% { transform: translateX(-51%) scale(0.98, 1.02) rotate(-1deg); opacity: 0.95; }
+  0%, 100% { transform: scale(1, 1) rotate(0deg); opacity: 1; }
+  17% { transform: scale(0.96, 1.05) rotate(-1.6deg); opacity: 0.94; }
+  33% { transform: scale(1.03, 0.97) rotate(1deg); opacity: 1; }
+  51% { transform: scale(1.02, 1.03) rotate(1.8deg); opacity: 0.96; }
+  69% { transform: scale(0.97, 1.04) rotate(-0.8deg); opacity: 0.93; }
+  85% { transform: scale(1.01, 0.99) rotate(0.4deg); opacity: 1; }
 }
 
-/* ---------------- PAGE ---------------- */
-.story-page {
-  width: min(90%, 780px);
-  max-width: 780px;
+/* Lysets varme skær, der falder ned over brevet og blafrer svagt */
+.candle-light {
+  position: fixed;
+  top: -45vh;
+  left: 50%;
+  width: 150vmax;
+  height: 110vh;
+  margin-left: -75vmax;
+  z-index: 2;
+  pointer-events: none;
 
-  padding: 130px 60px 90px;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    rgba(255, 196, 120, 0.2) 0%,
+    rgba(255, 180, 110, 0.08) 45%,
+    transparent 72%
+  );
+
+  will-change: opacity, transform;
+  animation: lightFlicker 4.2s ease-in-out infinite;
+}
+
+/* Lyset blafrer og svajer en anelse, som en levende flamme */
+@keyframes lightFlicker {
+  0%, 100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  22% { opacity: 0.86; transform: translate3d(-1.2%, 0, 0) scale(0.99); }
+  41% { opacity: 0.97; transform: translate3d(0.8%, 0, 0) scale(1.01); }
+  63% { opacity: 0.82; transform: translate3d(1.4%, 0, 0) scale(0.985); }
+  80% { opacity: 0.94; transform: translate3d(-0.6%, 0, 0) scale(1.005); }
+}
+
+/* Et ekstra, hurtigere flakker – lyset der danser på papiret */
+.paper-flicker {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: min(860px, 100vw);
+  height: 70vh;
+  margin-left: max(-430px, -50vw);
+  z-index: 2;
+  pointer-events: none;
+
+  background: radial-gradient(
+    ellipse 55% 60% at 50% 0%,
+    rgba(255, 205, 140, 0.13),
+    transparent 70%
+  );
+
+  will-change: opacity, transform;
+  animation: paperFlicker 1.9s ease-in-out infinite, paperSway 6s ease-in-out infinite;
+}
+
+@keyframes paperFlicker {
+  0% { opacity: 0.9; }
+  13% { opacity: 0.7; }
+  21% { opacity: 1; }
+  38% { opacity: 0.8; }
+  52% { opacity: 0.95; }
+  66% { opacity: 0.72; }
+  79% { opacity: 1; }
+  91% { opacity: 0.85; }
+}
+
+@keyframes paperSway {
+  0%, 100% { transform: translate3d(0, 0, 0) skewX(0deg); }
+  30% { transform: translate3d(-2%, 0, 0) skewX(-2deg); }
+  70% { transform: translate3d(2%, 0, 0) skewX(2deg); }
+}
+
+/* ---------------- STØV OG GLØDER I LYSET ---------------- */
+.motes {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mote {
+  position: absolute;
+  top: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 250, 235, 0.95), rgba(255, 240, 210, 0) 70%);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: moteFall linear forwards;
+}
+
+.mote.ember {
+  background: radial-gradient(circle, rgba(255, 214, 150, 1), rgba(255, 160, 90, 0) 70%);
+  box-shadow: 0 0 8px rgba(255, 180, 100, 0.6);
+}
+
+/* Falder langsomt og svajende – klarest midt i lyset, borte forneden */
+@keyframes moteFall {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  12% { opacity: 0.9; }
+  35% { transform: translate3d(var(--sway, 10px), 30vh, 0); opacity: 0.75; }
+  65% { transform: translate3d(calc(var(--sway, 10px) * -0.6), 62vh, 0); opacity: 0.35; }
+  100% { transform: translate3d(var(--sway, 10px), 95vh, 0); opacity: 0; }
+}
+
+/* ---------------- BREVPAPIRET ---------------- */
+.story-page {
+  position: relative;
+  z-index: 1;
+
+  width: min(92%, 780px);
+  max-width: 780px;
+  margin-bottom: 20px;
+
+  padding: 84px 70px 80px;
 
   text-align: left;
+  border-radius: 4px;
+
+  /* Varmt papir: lyset falder ovenfra, kanterne er lidt ældede */
+  background:
+    radial-gradient(ellipse 80% 22% at 50% 0%, rgba(255, 214, 160, 0.55), transparent 80%),
+    radial-gradient(ellipse 70% 50% at 0% 100%, rgba(160, 120, 80, 0.12), transparent 70%),
+    radial-gradient(ellipse 70% 50% at 100% 100%, rgba(160, 120, 80, 0.1), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.32 0 0 0 0 0.2 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, var(--paper-a) 0%, var(--paper-b) 100%);
+
+  box-shadow:
+    0 0 0 1px rgba(120, 85, 55, 0.12),
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    0 0 140px rgba(255, 180, 110, 0.12),
+    inset 0 0 60px rgba(150, 105, 65, 0.12);
+
+  opacity: 0;
+  transform: translateY(16px);
+  animation: paperIn 1.6s var(--ease-soft) 0.1s forwards;
+}
+
+@keyframes paperIn {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .story-page h1 {
-  font-size: clamp(28px, 6vw, 46px);
+  font-size: clamp(28px, 6vw, 44px);
+  font-weight: normal;
+  font-style: italic;
   line-height: 1.2;
   text-align: center;
 
-  margin-bottom: 50px;
+  margin-bottom: 18px;
 
-  color: var(--ember-soft);
-  text-shadow: 0 0 30px rgba(232, 169, 122, 0.35);
+  color: var(--ink-rose);
 
   opacity: 0;
-  animation: fadeUp 1.4s ease forwards 0.2s;
+  animation: fadeUp 1.6s var(--ease-soft) forwards 0.5s;
+  text-wrap: balance;
+}
+
+/* En lille håndtegnet streg under overskriften */
+.story-page h1::after {
+  content: "";
+  display: block;
+  width: 70px;
+  height: 1px;
+  margin: 22px auto 30px;
+  background: linear-gradient(90deg, transparent, rgba(138, 76, 66, 0.55), transparent);
 }
 
 .story-page p {
   font-size: 19px;
   line-height: 1.95;
-  color: var(--parchment);
-  text-shadow: 0 0 14px rgba(0, 0, 0, 0.3);
-  margin-bottom: 30px;
+  color: var(--ink);
+  margin-bottom: 26px;
+  text-wrap: pretty;
+  hyphens: auto;
 
+  /* Afsnittet folder sig blødt ud ovenfra, som et foldet brev.
+     (Kun transform/opacity – en clip-path ville skjule afsnittet
+     for IntersectionObserver, så det aldrig blev vist.) */
   opacity: 0;
-  transform: translateY(22px);
-  filter: blur(4px);
-  transition: opacity 0.9s ease, transform 0.9s ease, filter 0.9s ease;
+  transform: perspective(900px) rotateX(-62deg) scaleY(0.85) translateY(10px);
+  transform-origin: 50% 0%;
+  transition:
+    opacity 1.1s var(--ease-soft),
+    transform 1.5s var(--ease-soft);
 }
 
 .story-page p.is-visible {
   opacity: 1;
-  transform: translateY(0);
-  filter: blur(0);
+  transform: perspective(900px) rotateX(0deg) scaleY(1) translateY(0);
 }
 
 .story-page p:first-of-type {
   font-style: italic;
-  color: var(--rose);
+  color: var(--ink-rose);
 }
 
 .story-page p:last-of-type {
   text-align: center;
-  font-size: 22px;
-  color: var(--ember-soft);
+  font-size: 23px;
+  color: var(--ink-rose);
   direction: rtl;
-  margin-top: 50px;
+  margin-top: 46px;
+  margin-bottom: 0;
 }
 
 @keyframes fadeUp {
@@ -207,7 +437,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ---------------- AMBIENT GLOW ---------------- */
+/* ---------------- GLØD I RUMMET ---------------- */
 .story-particles::before,
 .story-particles::after {
   content: "";
@@ -215,7 +445,7 @@ body {
   width: 480px;
   height: 480px;
   border-radius: 50%;
-  background: radial-gradient(rgba(232, 169, 122, 0.14), transparent 70%);
+  background: radial-gradient(rgba(232, 169, 122, 0.12), transparent 70%);
   filter: blur(40px);
   animation: floatGlow 12s ease-in-out infinite alternate;
   pointer-events: none;
@@ -223,14 +453,14 @@ body {
 }
 
 .story-particles::before {
-  top: -120px;
-  left: -100px;
+  top: 10vh;
+  left: -220px;
 }
 
 .story-particles::after {
   bottom: -120px;
-  right: -100px;
-  background: radial-gradient(rgba(217, 154, 160, 0.12), transparent 70%);
+  right: -200px;
+  background: radial-gradient(rgba(217, 154, 160, 0.1), transparent 70%);
 }
 
 @keyframes floatGlow {
@@ -238,14 +468,18 @@ body {
   to { transform: translateY(40px); }
 }
 
+/* Små gløder fra lyset, der svæver i mørket omkring brevet */
 .story-particle {
   position: fixed;
+  z-index: 0;
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: var(--ember-soft);
   filter: blur(2px);
   pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
   animation: floatStoryParticle linear infinite;
   box-shadow:
     0 0 10px rgba(232, 169, 122, 0.8),
@@ -253,9 +487,10 @@ body {
 }
 
 @keyframes floatStoryParticle {
-  from { transform: translateY(0); opacity: 0; }
-  15% { opacity: 0.8; }
-  to { transform: translateY(-140px); opacity: 0; }
+  from { transform: translate3d(0, 0, 0); opacity: 0; }
+  18% { opacity: var(--particle-opacity, 0.6); }
+  80% { opacity: var(--particle-opacity, 0.6); }
+  to { transform: translate3d(var(--drift, 0px), -140px, 0); opacity: 0; }
 }
 
 /* ---------------- BACK TO TOP ---------------- */
@@ -277,33 +512,145 @@ body {
   text-decoration: none;
   font-size: 18px;
 
-  background: rgba(13, 6, 9, 0.78);
+  background: rgba(20, 12, 8, 0.8);
   border: 1px solid rgba(240, 226, 218, 0.22);
   backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45), 0 0 16px rgba(232, 169, 122, 0.2);
+
+  margin-bottom: env(safe-area-inset-bottom, 0px);
 
   opacity: 0;
   pointer-events: none;
-  transform: translateY(10px);
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  transform: translateY(10px) scale(0.9);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s var(--ease-soft),
+    box-shadow 0.3s ease;
+}
+
+@media (hover: hover) {
+  .to-top:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5), 0 0 22px rgba(232, 169, 122, 0.35);
+  }
 }
 
 .to-top.is-visible {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+}
+
+.to-top:focus-visible {
+  outline: 2px solid var(--ember-soft);
+  outline-offset: 3px;
+}
+
+/* ---------------- LYD-KNAP ---------------- */
+.sound-control {
+  position: fixed;
+  left: calc(16px + env(safe-area-inset-left, 0px));
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  z-index: 50;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sound-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 17px;
+  line-height: 1;
+  color: white;
+  cursor: pointer;
+
+  background: rgba(20, 12, 8, 0.8);
+  border: 1px solid rgba(240, 226, 218, 0.22);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45), 0 0 16px rgba(232, 169, 122, 0.2);
+
+  opacity: 0.75;
+  transition: opacity 0.4s ease;
+}
+
+.sound-button.is-on {
+  opacity: 0.9;
+}
+
+.sound-button:focus-visible {
+  outline: 2px solid var(--ember-soft);
+  outline-offset: 3px;
+}
+
+.sound-hint {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  letter-spacing: 0.4px;
+  color: var(--parchment);
+  background: rgba(20, 12, 8, 0.7);
+  transition: opacity 0.8s ease;
+  animation: hintBreathe 3.4s ease-in-out 2s infinite;
+}
+
+.sound-hint.is-hidden {
+  opacity: 0;
+  animation: none;
+  pointer-events: none;
+}
+
+@keyframes hintBreathe {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .paper-flicker,
+  .sound-hint {
+    animation: none;
+  }
+
+
+
+  .story-page p {
+    transform: none;
+  }
+
+  .story-particle {
+    display: none;
+  }
+
+  .candle-light {
+    animation: none;
+  }
 }
 
 /* ---------------- MOBILE ---------------- */
 @media (max-width: 768px) {
+  body {
+    padding-top: 100px;
+  }
+
   .story-page {
-    padding: 112px 24px 70px;
+    width: calc(100% - 24px);
+    padding: 52px 28px 56px;
   }
 
   .story-page p {
     font-size: 17px;
     line-height: 1.85;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
   }
 
   .story-particles::before,
@@ -319,18 +666,24 @@ body {
 }
 
 @media (max-width: 480px) {
+  body {
+    padding-top: 96px;
+    padding-bottom: 60px;
+  }
+
   .story-page {
-    padding: 108px 16px 60px;
+    width: calc(100% - 20px);
+    padding: 40px 20px 44px;
   }
 
   .story-page p {
-    font-size: 15.5px;
+    font-size: 16px;
     line-height: 1.8;
     margin-bottom: 20px;
   }
 
   .story-page h1 {
-    margin-bottom: 34px;
+    margin-bottom: 10px;
   }
 
   .story-particles::before,
