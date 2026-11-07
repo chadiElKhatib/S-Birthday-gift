@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0a0410" />
+    <title>Til dig</title>
+    <link rel="stylesheet" href="lock/lock.css" />
+  </head>
+  <body data-page="låseside">
+    <main class="lock">
+      <div class="lock-glow" aria-hidden="true"></div>
+
+      <form id="lockForm" class="lock-card" autocomplete="off" hidden>
+        <p class="lock-icon" aria-hidden="true">🕯️</p>
+        <div id="lockFields" class="lock-fields"></div>
+
+        <button id="lockButton" class="lock-button" type="submit">Åbn</button>
+        <p id="lockMessage" class="lock-message" role="status"></p>
+      </form>
+
+      <p id="lockLoading" class="lock-loading">…</p>
+    </main>
+
+    <noscript>
+      <p class="lock-message">Slå JavaScript til for at åbne siden.</p>
+    </noscript>
+
+    <script src="assets/js/tracker.js"></script>
+    <script src="lock/answers.js"></script>
+    <script src="lock/lock.js"></script>
+  </body>
+</html>

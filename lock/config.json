@@ -1,0 +1,15 @@
+{
+  "questions": [
+    {
+      "text": "Hvad hedder din hund?",
+      "kind": "text"
+    },
+    {
+      "text": "Hvornår har du fødselsdag?",
+      "kind": "date",
+      "placeholder": "fx 1. januar 2000"
+    }
+  ],
+  "salt": "ifiOFQkkDxJ1QRHR/RW49Q==",
+  "iterations": 600000
+}
